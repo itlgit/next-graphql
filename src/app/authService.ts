@@ -1,3 +1,4 @@
+import { signOut } from "next-auth/react";
 
 export async function login(
   email: string,
@@ -10,8 +11,5 @@ export async function login(
 }
 
 export async function logout(): Promise<void> {
-  // Simulate an API call to logout
-  return new Promise((resolve) => {
-    resolve();
-  });
+  return signOut();
 }

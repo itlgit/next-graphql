@@ -14,14 +14,16 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 type Documents = {
-    "\n  query GetAllUsers {\n    allUsers {\n      id\n      name\n      email\n    }\n  }\n": typeof types.GetAllUsersDocument,
-    "\n  query GetUserById($id: ID!) {\n    userById(id: $id) {\n      id\n      name\n      email\n    }\n  }\n": typeof types.GetUserByIdDocument,
-    "\n  query GetUserByEmail($email: String!) {\n    userByEmail(email: $email) {\n      id\n      name\n      email\n    }\n  }\n": typeof types.GetUserByEmailDocument,
+    "\n  query GetCapabilitiesByRoles($roles: [String!]!) {\n    capabilitiesByRoles(roles: $roles) {\n      op\n      label\n      path\n      roles\n    }\n  }\n": typeof types.GetCapabilitiesByRolesDocument,
+    "\n  query GetAllUsers {\n    allUsers {\n      id\n      name\n      email\n      roles\n    }\n  }\n": typeof types.GetAllUsersDocument,
+    "\n  query GetUserById($id: ID!) {\n    userById(id: $id) {\n      id\n      name\n      email\n      roles\n    }\n  }\n": typeof types.GetUserByIdDocument,
+    "\n  query GetUserByEmail($email: String!) {\n    userByEmail(email: $email) {\n      id\n      name\n      email\n      roles\n    }\n  }\n": typeof types.GetUserByEmailDocument,
 };
 const documents: Documents = {
-    "\n  query GetAllUsers {\n    allUsers {\n      id\n      name\n      email\n    }\n  }\n": types.GetAllUsersDocument,
-    "\n  query GetUserById($id: ID!) {\n    userById(id: $id) {\n      id\n      name\n      email\n    }\n  }\n": types.GetUserByIdDocument,
-    "\n  query GetUserByEmail($email: String!) {\n    userByEmail(email: $email) {\n      id\n      name\n      email\n    }\n  }\n": types.GetUserByEmailDocument,
+    "\n  query GetCapabilitiesByRoles($roles: [String!]!) {\n    capabilitiesByRoles(roles: $roles) {\n      op\n      label\n      path\n      roles\n    }\n  }\n": types.GetCapabilitiesByRolesDocument,
+    "\n  query GetAllUsers {\n    allUsers {\n      id\n      name\n      email\n      roles\n    }\n  }\n": types.GetAllUsersDocument,
+    "\n  query GetUserById($id: ID!) {\n    userById(id: $id) {\n      id\n      name\n      email\n      roles\n    }\n  }\n": types.GetUserByIdDocument,
+    "\n  query GetUserByEmail($email: String!) {\n    userByEmail(email: $email) {\n      id\n      name\n      email\n      roles\n    }\n  }\n": types.GetUserByEmailDocument,
 };
 
 /**
@@ -41,15 +43,19 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query GetAllUsers {\n    allUsers {\n      id\n      name\n      email\n    }\n  }\n"): (typeof documents)["\n  query GetAllUsers {\n    allUsers {\n      id\n      name\n      email\n    }\n  }\n"];
+export function graphql(source: "\n  query GetCapabilitiesByRoles($roles: [String!]!) {\n    capabilitiesByRoles(roles: $roles) {\n      op\n      label\n      path\n      roles\n    }\n  }\n"): (typeof documents)["\n  query GetCapabilitiesByRoles($roles: [String!]!) {\n    capabilitiesByRoles(roles: $roles) {\n      op\n      label\n      path\n      roles\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query GetUserById($id: ID!) {\n    userById(id: $id) {\n      id\n      name\n      email\n    }\n  }\n"): (typeof documents)["\n  query GetUserById($id: ID!) {\n    userById(id: $id) {\n      id\n      name\n      email\n    }\n  }\n"];
+export function graphql(source: "\n  query GetAllUsers {\n    allUsers {\n      id\n      name\n      email\n      roles\n    }\n  }\n"): (typeof documents)["\n  query GetAllUsers {\n    allUsers {\n      id\n      name\n      email\n      roles\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query GetUserByEmail($email: String!) {\n    userByEmail(email: $email) {\n      id\n      name\n      email\n    }\n  }\n"): (typeof documents)["\n  query GetUserByEmail($email: String!) {\n    userByEmail(email: $email) {\n      id\n      name\n      email\n    }\n  }\n"];
+export function graphql(source: "\n  query GetUserById($id: ID!) {\n    userById(id: $id) {\n      id\n      name\n      email\n      roles\n    }\n  }\n"): (typeof documents)["\n  query GetUserById($id: ID!) {\n    userById(id: $id) {\n      id\n      name\n      email\n      roles\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query GetUserByEmail($email: String!) {\n    userByEmail(email: $email) {\n      id\n      name\n      email\n      roles\n    }\n  }\n"): (typeof documents)["\n  query GetUserByEmail($email: String!) {\n    userByEmail(email: $email) {\n      id\n      name\n      email\n      roles\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

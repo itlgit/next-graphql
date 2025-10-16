@@ -1,0 +1,9 @@
+[
+  { "op": "home", "label": "Home", "path": "/", "roles": ["all"] },
+  { "op": "team", "label": "Team", "path": "/team", "roles": ["all"] },
+  { "op": "projects", "label": "Projects", "path": "/projects", "roles": ["all"] },
+  { "op": "calendar", "label": "Calendar", "path": "/calendar", "roles": ["user"] },
+  { "op": "documents", "label": "Documents", "path": "/documents", "roles": ["admin"] },
+  { "op": "reports", "label": "Reports", "path": "/reports", "roles": ["admin"] },
+  { "op": "settings", "label": "Settings", "path": "/settings", "roles": ["all"] }
+]

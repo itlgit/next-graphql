@@ -7,14 +7,41 @@ import {
 } from '@headlessui/react';
 import Link from 'next/link';
 import React, { Fragment } from 'react';
+import { Capability, User } from '../gql/graphql';
+import { useSession } from 'next-auth/react';
+import useCapabilities from '@/hooks/useCapabilities';
 
-const nav = [
-  { name: 'Home', href: '/dashboard', current: true },
-  { name: 'Team', href: '/dashboard/team', current: false },
-  { name: 'Settings', href: '/dashboard/settings', current: false },
-];
+interface Nav extends Capability {
+  current: boolean;
+}
+
+const DASHBOARD_PREFIX = '/dashboard';
+
+function useLoadCapabilities(user: User | undefined, open: boolean, setCaps: React.Dispatch<React.SetStateAction<Nav[]>>) {
+  const { getCapabilitiesByRoles } = useCapabilities();
+
+  React.useEffect(() => {
+    if (open && user) {
+      getCapabilitiesByRoles(user.roles).then((caps: Capability[]) => {
+        setCaps(
+          caps.map((cap) => ({
+            ...cap,
+            path: `${DASHBOARD_PREFIX}${cap.path}`,
+            current: window.location.pathname == `${DASHBOARD_PREFIX}${cap.path}`,
+          }))
+        );
+      });
+    }
+  }, [user, open]);
+}
 
 export const DesktopSidebar = () => {
+  const session = useSession();
+  const user = session.data?.user as User;
+  const [caps, setCaps] = React.useState<Nav[]>([]);
+
+  useLoadCapabilities(user, true, setCaps);
+
   return (
     <aside className="hidden w-72 bg-white border-r border-slate-200 dark:bg-slate-800 dark:border-slate-700 md:block">
       <div className="h-full flex flex-col">
@@ -23,10 +50,10 @@ export const DesktopSidebar = () => {
         </div>
 
         <nav className="flex-1 px-3 py-5 space-y-1 overflow-auto">
-          {nav.map((item) => (
+          {caps.map((item) => (
             <Link
-              key={item.name}
-              href={item.href}
+              key={item.op}
+              href={item.path}
               className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm font-medium transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
                 item.current
                   ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-600/20 dark:text-indigo-200'
@@ -34,14 +61,14 @@ export const DesktopSidebar = () => {
               }`}
             >
               <span className="w-2.5 h-2.5 rounded-full bg-transparent" />
-              {item.name}
+              {item.label}
             </Link>
           ))}
         </nav>
 
         <div className="px-4 py-4 border-t border-slate-200 dark:border-slate-700">
           <Link
-            href="/profile"
+            href={`${DASHBOARD_PREFIX}/profile`}
             className="block rounded-md px-3 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700"
           >
             View profile
@@ -57,6 +84,12 @@ type MobileProps = {
   onClose: () => void;
 };
 export const MobileSidebar = (props: MobileProps) => {
+  const session = useSession();
+  const user = session.data?.user as User;
+  const [caps, setCaps] = React.useState<Nav[]>([]);
+
+  useLoadCapabilities(user, props.open, setCaps);
+
   return (
     <Transition show={props.open} as={Fragment}>
       <Dialog
@@ -104,10 +137,10 @@ export const MobileSidebar = (props: MobileProps) => {
               </div>
 
               <nav className="px-2 py-4 space-y-1">
-                {nav.map((item) => (
+                {caps.map((item) => (
                   <Link
-                    key={item.name}
-                    href={item.href}
+                    key={item.op}
+                    href={item.path}
                     className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm font-medium transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
                       item.current
                         ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-600/20 dark:text-indigo-200'
@@ -116,7 +149,7 @@ export const MobileSidebar = (props: MobileProps) => {
                     onClick={() => props.onClose()}
                   >
                     <span className="w-2.5 h-2.5 rounded-full bg-transparent" />
-                    {item.name}
+                    {item.label}
                   </Link>
                 ))}
               </nav>

@@ -1,6 +1,6 @@
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
-import { getUserByEmail } from '@/app/users';
+import { getUserByEmail } from '@/data/users';
 
 const handler = NextAuth({
   session: {
@@ -24,6 +24,10 @@ const handler = NextAuth({
     async redirect() {
       return '/dashboard';
     },
+    async session({ session, token }) {
+      session.user = getUserByEmail(session.user?.email || '') || undefined;
+      return session;
+    }
   },
 });
 export { handler as GET, handler as POST };

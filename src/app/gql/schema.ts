@@ -2,14 +2,20 @@ import { join } from 'node:path';
 import { loadSchemaSync } from '@graphql-tools/load';
 import { GraphQLFileLoader } from '@graphql-tools/graphql-file-loader';
 import { addResolversToSchema } from '@graphql-tools/schema';
-import * as Users from '../users';
+import * as Users from '../../data/users';
+import * as Capabilities from '../../data/capabilities';
 
 const resolvers = {
   Query: {
+    // users
     userById: (_: any, { id }: { id: string }) => Users.getUserById(id),
     userByEmail: (_: any, { email }: { email: string }) =>
       Users.getUserByEmail(email),
     allUsers: () => Users.getAllUsers(),
+    // capabilities
+    capabilitiesByRoles: (_: any, { roles }: { roles: string[] }) => {
+      return Capabilities.getCapabilitiesByRoles(roles);
+    },
   },
 };
 

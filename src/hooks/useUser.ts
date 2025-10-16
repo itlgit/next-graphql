@@ -4,7 +4,7 @@ import {
   GetUserByEmailQuery,
   GetUserByIdQuery,
   User,
-} from './gql/graphql';
+} from '../app/gql/graphql';
 
 const GET_ALL_USERS = gql`
   query GetAllUsers {
@@ -12,6 +12,7 @@ const GET_ALL_USERS = gql`
       id
       name
       email
+      roles
     }
   }
 `;
@@ -22,6 +23,7 @@ const GET_USER_BY_ID = gql`
       id
       name
       email
+      roles
     }
   }
 `;
@@ -32,6 +34,7 @@ const GET_USER_BY_EMAIL = gql`
       id
       name
       email
+      roles
     }
   }
 `;

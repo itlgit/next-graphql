@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import useUserService from '@/app/useUserService';
+import useUserService from '@/hooks/useUser';
 import { User } from '@/app/gql/graphql';
 
 export default function TeamPage() {

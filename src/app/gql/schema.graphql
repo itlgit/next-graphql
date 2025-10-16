@@ -2,10 +2,19 @@ type User {
   id: ID!
   name: String!
   email: String!
+  roles: [String!]!
+}
+
+type Capability {
+  op: String!
+  label: String!
+  path: String!
+  roles: [String!]!
 }
 
 type Query {
   userById(id: ID!): User
   userByEmail(email: String!): User
   allUsers: [User!]!
+  capabilitiesByRoles(roles: [String!]!): [Capability!]!
 }

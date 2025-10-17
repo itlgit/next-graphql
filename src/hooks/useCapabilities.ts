@@ -2,7 +2,7 @@ import { useLazyQuery } from '@apollo/client/react';
 import { gql } from '@apollo/client';
 import type { Capability } from '../data/capabilities';
 
-const GET_CAPABILITIES_BY_ROLES = gql`
+export const GET_CAPABILITIES_BY_ROLES = gql`
   query GetCapabilitiesByRoles($roles: [String!]!) {
     capabilitiesByRoles(roles: $roles) {
       op

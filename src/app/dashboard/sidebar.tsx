@@ -7,9 +7,7 @@ import {
 } from '@headlessui/react';
 import Link from 'next/link';
 import React, { Fragment } from 'react';
-import { Capability, User } from '../gql/graphql';
-import { useSession } from 'next-auth/react';
-import useCapabilities from '@/hooks/useCapabilities';
+import { Capability } from '../gql/graphql';
 
 interface Nav extends Capability {
   current: boolean;
@@ -17,30 +15,23 @@ interface Nav extends Capability {
 
 const DASHBOARD_PREFIX = '/dashboard';
 
-function useLoadCapabilities(user: User | undefined, open: boolean, setCaps: React.Dispatch<React.SetStateAction<Nav[]>>) {
-  const { getCapabilitiesByRoles } = useCapabilities();
-
-  React.useEffect(() => {
-    if (open && user) {
-      getCapabilitiesByRoles(user.roles).then((caps: Capability[]) => {
-        setCaps(
-          caps.map((cap) => ({
-            ...cap,
-            path: `${DASHBOARD_PREFIX}${cap.path}`,
-            current: window.location.pathname == `${DASHBOARD_PREFIX}${cap.path}`,
-          }))
-        );
-      });
-    }
-  }, [user, open]);
+function changeCapToNav(capabilities: Capability[]): Nav[] {
+  return capabilities.map((cap) => ({
+    ...cap,
+    path: `${DASHBOARD_PREFIX}${cap.path}`,
+    current: window.location.pathname == `${DASHBOARD_PREFIX}${cap.path}`,
+  }));
 }
 
-export const DesktopSidebar = () => {
-  const session = useSession();
-  const user = session.data?.user as User;
-  const [caps, setCaps] = React.useState<Nav[]>([]);
+type Props = {
+  capabilities: Capability[];
+};
 
-  useLoadCapabilities(user, true, setCaps);
+export const DesktopSidebar = (props: Props) => {
+  const nav = React.useMemo<Nav[]>(
+    () => changeCapToNav(props.capabilities),
+    [props.capabilities]
+  );
 
   return (
     <aside className="hidden w-72 bg-white border-r border-slate-200 dark:bg-slate-800 dark:border-slate-700 md:block">
@@ -50,7 +41,7 @@ export const DesktopSidebar = () => {
         </div>
 
         <nav className="flex-1 px-3 py-5 space-y-1 overflow-auto">
-          {caps.map((item) => (
+          {nav.map((item) => (
             <Link
               key={item.op}
               href={item.path}
@@ -79,17 +70,15 @@ export const DesktopSidebar = () => {
   );
 };
 
-type MobileProps = {
+interface MobileProps extends Props {
   open: boolean;
   onClose: () => void;
-};
+}
 export const MobileSidebar = (props: MobileProps) => {
-  const session = useSession();
-  const user = session.data?.user as User;
-  const [caps, setCaps] = React.useState<Nav[]>([]);
-
-  useLoadCapabilities(user, props.open, setCaps);
-
+  const nav = React.useMemo<Nav[]>(
+    () => changeCapToNav(props.capabilities),
+    [props.capabilities]
+  );
   return (
     <Transition show={props.open} as={Fragment}>
       <Dialog
@@ -137,7 +126,7 @@ export const MobileSidebar = (props: MobileProps) => {
               </div>
 
               <nav className="px-2 py-4 space-y-1">
-                {caps.map((item) => (
+                {nav.map((item) => (
                   <Link
                     key={item.op}
                     href={item.path}
